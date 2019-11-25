@@ -131,11 +131,8 @@ namespace QAHub.Models
             {
                 conn.Dispose();
             } 
-
-
-
         }
-        public void Delete(int id)
+        public static void Delete(int id)
         {
             MySqlConnection conn = DB.Connection();
             conn.Open();

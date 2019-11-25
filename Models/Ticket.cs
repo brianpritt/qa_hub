@@ -19,6 +19,7 @@ namespace QAHub.Models
         public DateTime TicketTime {get;set;}
         public DateTime TicketUpdate {get;set;}
         public List<Reply> TicketReplies {get;set;}
+        public static string[] Assignments = {"Platform", "UI", "Data", "Unassigned"};
         
         public Ticket()
         {
@@ -175,7 +176,7 @@ namespace QAHub.Models
                 conn.Dispose();
             }   
         }
-        
+
         //Deletes Ticket and all replies associated with it.
         public static void DeleteTicket(int id)
         {
@@ -192,6 +193,11 @@ namespace QAHub.Models
             {
                 conn.Dispose();
             }
+        }
+        public void CheckAssignment()
+        {
+            // bool a = Array.Exists(Ticket.Assignments, this.TicketCategory);
+            // Console.WriteLine(this.TicketCategory)
         }
     }
 }

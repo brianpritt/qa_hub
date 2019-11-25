@@ -23,24 +23,27 @@ namespace QAHub.Controllers
         {
             return Reply.GetReply(id);
         }
-        //POST REPLY
+        //POST REPLY to TICKET
         [HttpPost("{id}")]
         //Put ticket/reply/{ticketId}
-        public void Post(int id, [FromBody]Reply reply)
+        public ActionResult Post(int id, [FromBody]Reply reply)
         {
             reply.SaveReply(id);  
+            return StatusCode(201);
         }
         //PUT REPLY
         [HttpPut("{id}/update")]
-        public void Update(int id, [FromBody]Reply reply)
+        public ActionResult Update(int id, [FromBody]Reply reply)
         {
             reply.Update(id);
+            return StatusCode(201);
         }
         //Delete REPLY
         [HttpDelete("{id}/delete")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-
+            Reply.Delete(id);
+            return StatusCode(200);
         }
         
     }
