@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using QAHub.Models;
-using MySql.Data.MySqlClient;
-using System.Reflection;
+
 
 
 namespace QAHub.Controllers
@@ -33,30 +32,23 @@ namespace QAHub.Controllers
         {
             ticket.SaveTicket();
         }
-
-        [HttpDelete]
-        public void Delete()
-        {
-            MySqlConnection conn = DB.Connection();
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"DELETE FROM tickets;";
-            cmd.ExecuteNonQuery();
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
-        }
-       
         
-        
-        
-        
-        [HttpPut("{id}")]
-        // Put Update TICKET {id} ticket/{id}
+        [HttpPut("{id}/update")]
+        // Put Update TICKET {id} ticket/{id}/update
         public void Put(int id, [FromBody]Ticket ticket)
         {
             ticket.Update(id);
+        }
+        // we dont want a delete all, just a /delete/{id}
+        [HttpDelete("{id}/delete")]
+        public void Delete(int id)
+        {
+            Ticket.DeleteTicket(id);
+        }
+        [HttpDelete]
+        public void DeleteAll()
+        {
+            //Endpoint not utilized.
         }
     }
 }

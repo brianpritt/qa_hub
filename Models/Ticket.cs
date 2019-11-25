@@ -1,5 +1,6 @@
 //add create date/time, priority, timeline
 //change sting TicketAutor to int TicketAuthor when users is implemented
+//add
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -10,8 +11,6 @@ namespace QAHub.Models
 {
     public class Ticket
     {
-        
-        
         public int TicketId {get; set;}
         public string TicketTitle {get; set;}
         public string TicketCategory {get; set;}
@@ -42,7 +41,7 @@ namespace QAHub.Models
             TicketTime = ticketTime;
         }
         //Overload for sending a record that has been retrieved 
-        public Ticket(int ticketId, string ticketTitle, string ticketCategory, string ticketBody, string ticketAuthor, DateTime ticketTime)
+        public Ticket(int ticketId, string ticketTitle, string ticketCategory, string ticketBody, string ticketAuthor, DateTime ticketTime, DateTime ticketUpdate)
         {
             TicketId = ticketId;
             TicketTitle = ticketTitle;
@@ -50,8 +49,11 @@ namespace QAHub.Models
             TicketBody = ticketBody;
             TicketAuthor = ticketAuthor;
             TicketTime = ticketTime;
+            TicketUpdate = ticketUpdate;
             TicketReplies = new List<Reply>{};
         }
+        //should get all pull all of the replies as well?
+        // replace .GetReplies() with newest method.
         public static List<Ticket> GetAll()
         {
             List<Ticket> allTickets = new List<Ticket>{};
@@ -68,9 +70,10 @@ namespace QAHub.Models
                 string TicketBody = rdr.GetString(3);
                 string TicketAuthor = rdr.GetString(4);
                 DateTime TicketTime = rdr.GetDateTime(5);
+                DateTime TicketUpdate =rdr.GetDateTime(6);
                 
-                Ticket currentTicket = new Ticket(TicketId, TicketTitle, TicketCategory, TicketBody, TicketAuthor, TicketTime);
-                currentTicket.TicketReplies = Reply.GetReplies(currentTicket.TicketId);
+                Ticket currentTicket = new Ticket(TicketId, TicketTitle, TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);
+                // currentTicket.TicketReplies = Reply.GetReplies(currentTicket.TicketId);
                 allTickets.Add(currentTicket);
             }
             conn.Close();
@@ -107,12 +110,10 @@ namespace QAHub.Models
                 DateTime ReplyUpdate = rdr.GetDateTime(11);
                 int ReplyTicketId = rdr.GetInt32(12);
                 
-
-                // bool contains = pricePublicList.Any(p => p.Size == 200);
                 var ticket  = allTickets.Where(p => p.TicketId == TicketId).FirstOrDefault();
                 if (ticket == null)
                 {
-                    Ticket newTicket = new Ticket(TicketId, TicketTitle,  TicketCategory, TicketBody, TicketAuthor, TicketTime);
+                    Ticket newTicket = new Ticket(TicketId, TicketTitle,  TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);
                     Reply newReply = new Reply(ReplyId,ReplyAuthor,ReplyBody,ReplyTime,ReplyUpdate,ReplyTicketId);
                     newTicket.TicketReplies.Add(newReply);
                     allTickets.Add(newTicket);
@@ -134,12 +135,11 @@ namespace QAHub.Models
         public void SaveTicket()
         {
             this.TicketTime = DateTime.Now;
-            //Move the following into ticket class
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             
-            cmd.CommandText = @" INSERT INTO tickets (tickettitle,ticketcategory,ticketbody,ticketauthor, tickettime) VALUES ( @title, @category, @body, @author, @time);";
+            cmd.CommandText = @"INSERT INTO tickets (tickettitle,ticketcategory,ticketbody,ticketauthor, tickettime) VALUES ( @title, @category, @body, @author, @time);";
             cmd.Parameters.AddWithValue("@title",this.TicketTitle);
             cmd.Parameters.AddWithValue("@category", this.TicketCategory);
             cmd.Parameters.AddWithValue("@body",this.TicketBody);
@@ -152,29 +152,46 @@ namespace QAHub.Models
                 conn.Dispose();
             }
         }
-        
         public void Update(int id)
         {
+            this.TicketUpdate = DateTime.Now;
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             //UPDATE test_accs
-   
+            Console.WriteLine(this.TicketUpdate);
             
-            cmd.CommandText = @"UPDATE tickets SET ticketcategory = IFNULL(@thisCategory, ticketcategory), tickettitle = IFNULL(@thisTitle, tickettitle), ticketbody = IFNULL(@thisBody, ticketbody) WHERE ticketid = @thisId;";
+            cmd.CommandText = @"UPDATE tickets SET ticketcategory = IFNULL(@thisCategory, ticketcategory), tickettitle = IFNULL(@thisTitle, tickettitle), ticketbody = IFNULL(@thisBody, ticketbody), ticketupdate = @thisUpdateTime WHERE ticketid = @thisId;";
+            cmd.Parameters.AddWithValue("@thisUpdateTime", this.TicketUpdate);
             cmd.Parameters.AddWithValue("@thisCategory", this.TicketCategory);
             cmd.Parameters.AddWithValue("@thisTitle", this.TicketTitle);
             cmd.Parameters.AddWithValue("@thisBody", this.TicketBody);
             cmd.Parameters.AddWithValue("@thisId", id);
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             
-            // cmd.ExecuteNonQuery();
             conn.Close();
             if(conn != null)
             {
                 conn.Dispose();
+            }   
+        }
+        
+        //Deletes Ticket and all replies associated with it.
+        public static void DeleteTicket(int id)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+
+            //Foreign Key on replies set to Cascade, it fet a little dirty to do it.
+            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid;";
+            cmd.Parameters.AddWithValue("@thisid", id);
+
+            cmd.ExecuteNonQuery();
+            if (conn != null)
+            {
+                conn.Dispose();
             }
-                
         }
     }
 }
