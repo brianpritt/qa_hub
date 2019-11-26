@@ -12,7 +12,7 @@ namespace QAHub.Models
         public string TicketTitle {get; set;}
         public string TicketCategory {get; set;}
         public string TicketBody {get; set;}
-        public string TicketAuthor{get; set;}
+        public int TicketAuthor{get; set;}
         public DateTime TicketTime {get;set;}
         public DateTime TicketUpdate {get;set;}
         public List<Reply> TicketReplies {get;set;}
@@ -30,7 +30,7 @@ namespace QAHub.Models
             TicketBody = body;
         }
         //overload for new Ticket
-        public Ticket( string ticketTitle, string ticketCategory, string ticketBody, string ticketAuthor, DateTime ticketTime)
+        public Ticket( string ticketTitle, string ticketCategory, string ticketBody, int ticketAuthor, DateTime ticketTime)
         {
             TicketTitle = ticketTitle;
             TicketCategory = ticketCategory;
@@ -39,7 +39,7 @@ namespace QAHub.Models
             TicketTime = ticketTime;
         }
         //Overload for sending a record that has been retrieved 
-        public Ticket(int ticketId, string ticketTitle, string ticketCategory, string ticketBody, string ticketAuthor, DateTime ticketTime, DateTime ticketUpdate)
+        public Ticket(int ticketId, string ticketTitle, string ticketCategory, string ticketBody, int ticketAuthor, DateTime ticketTime, DateTime ticketUpdate)
         {
             TicketId = ticketId;
             TicketTitle = ticketTitle;
@@ -66,7 +66,7 @@ namespace QAHub.Models
                 string TicketTitle = rdr.GetString(1);
                 string TicketCategory = rdr.GetString(2);
                 string TicketBody = rdr.GetString(3);
-                string TicketAuthor = rdr.GetString(4);
+                int TicketAuthor = rdr.GetInt32(4);
                 DateTime TicketTime = rdr.GetDateTime(5);
                 DateTime TicketUpdate =rdr.GetDateTime(6);
                 
@@ -98,11 +98,11 @@ namespace QAHub.Models
                 string TicketTitle = rdr.GetString(1);
                 string TicketCategory = rdr.GetString(2);
                 string TicketBody = rdr.GetString(3);
-                string TicketAuthor = rdr.GetString(4);
+                int TicketAuthor = rdr.GetInt32(4);
                 DateTime TicketTime = rdr.GetDateTime(5);
                 DateTime TicketUpdate = rdr.GetDateTime(6);
                 int ReplyId = rdr.GetInt32(7);
-                string ReplyAuthor = rdr.GetString(8);
+                int ReplyAuthor = rdr.GetInt32(8);
                 string ReplyBody = rdr.GetString(9);
                 DateTime ReplyTime = rdr.GetDateTime(10);
                 DateTime ReplyUpdate = rdr.GetDateTime(11);
@@ -136,7 +136,7 @@ namespace QAHub.Models
             this.TicketTime = DateTime.Now;
             this.TicketUpdate = DateTime.Now;
             this.CheckAssignment();
-            if (this.TicketAuthor == null || this.TicketBody == null || this.TicketTitle == null)
+            if (this.TicketAuthor == 0 || this.TicketBody == null || this.TicketTitle == null)
             {
                 return "Not all fields have been supplied";
             }
@@ -152,6 +152,7 @@ namespace QAHub.Models
             cmd.Parameters.AddWithValue("@author",this.TicketAuthor);
             cmd.Parameters.AddWithValue("@time", this.TicketTime);
             cmd.Parameters.AddWithValue("@update", this.TicketUpdate);
+            
             cmd.ExecuteNonQuery();
             conn.Close();
             if(conn != null)

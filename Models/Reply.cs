@@ -7,7 +7,7 @@ namespace QAHub.Models
     public class Reply
     {
         public int ReplyId {get;set;}
-        public string ReplyAuthor {get; set;}
+        public int ReplyAuthor {get; set;}
         public string ReplyBody {get;set;}
         public DateTime ReplyTime {get; set;}
         public DateTime ReplyUpdate {get;set;}
@@ -18,13 +18,13 @@ namespace QAHub.Models
         {
 
         }
-        public Reply(string replyAuthor, string replyBody,DateTime replyTime)
+        public Reply(int replyAuthor, string replyBody,DateTime replyTime)
         {
             ReplyAuthor=replyAuthor;
             ReplyBody = replyBody;
             ReplyTime = replyTime;
         }
-        public Reply(int replyId,string replyAuthor, string replyBody,DateTime replyTime, DateTime replyUpdate, int ticketId)
+        public Reply(int replyId,int replyAuthor, string replyBody,DateTime replyTime, DateTime replyUpdate, int ticketId)
         {
             ReplyId = replyId;
             ReplyAuthor = replyAuthor;
@@ -45,7 +45,7 @@ namespace QAHub.Models
             while (rdr.Read())
             {
                 int ReplyId = rdr.GetInt32(0);
-                string ReplyAuthor = rdr.GetString(1);
+                int ReplyAuthor = rdr.GetInt32(1);
                 string ReplyBody = rdr.GetString(2);
                 DateTime ReplyTime = rdr.GetDateTime(3);
                 DateTime ReplyUpdate = rdr.GetDateTime(4);
@@ -73,7 +73,7 @@ namespace QAHub.Models
             while (rdr.Read())
             {
                 int ReplyId = rdr.GetInt32(0);
-                string ReplyAuthor = rdr.GetString(1);
+                int ReplyAuthor = rdr.GetInt32(1);
                 string ReplyBody = rdr.GetString(2);
                 DateTime ReplyTime = rdr.GetDateTime(3);
                 DateTime ReplyUpdate = rdr.GetDateTime(4);
@@ -93,7 +93,7 @@ namespace QAHub.Models
             this.ReplyTime = DateTime.Now;
             this.ReplyUpdate = DateTime.Now;
             Console.WriteLine(DateTime.Now);
-            if (this.ReplyAuthor == null || this.ReplyBody == null)
+            if (this.ReplyAuthor == 0 || this.ReplyBody == null)
             {
                 return "Not all fields have been supplied";
             }
