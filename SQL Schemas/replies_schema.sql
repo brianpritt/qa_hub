@@ -1,15 +1,4 @@
-CREATE DATABASE `qa_hub_sql_2`;
-USE `qa_hub_sql_2`;
-CREATE TABLE `tickets` (
-  `ticketid` int(11) NOT NULL AUTO_INCREMENT,
-  `tickettitle` varchar(255) DEFAULT NULL,
-  `ticketcategory` varchar(45) DEFAULT NULL,
-  `ticketbody` varchar(255) DEFAULT NULL,
-  `ticketauthor` varchar(45) DEFAULT NULL,
-  `tickettime` datetime NOT NULL,
-  `ticketupdate` datetime DEFAULT NULL,
-  PRIMARY KEY (`ticketid`)
-);
+DROP TABLE IF EXISTS 'replies'
 CREATE TABLE `replies` (
   `replyid` int(11) NOT NULL AUTO_INCREMENT,
   `replyauthor` varchar(45) DEFAULT NULL,
@@ -20,4 +9,4 @@ CREATE TABLE `replies` (
   PRIMARY KEY (`replyid`),
   KEY `ticketid_idx` (`ticketid`),
   CONSTRAINT `ticketid` FOREIGN KEY (`ticketid`) REFERENCES `tickets` (`ticketid`) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

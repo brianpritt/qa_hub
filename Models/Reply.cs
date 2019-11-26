@@ -98,7 +98,7 @@ namespace QAHub.Models
                 return "Not all fields have been supplied";
             }
             MySqlConnection conn = DB.Connection();
-            conn.Open();
+            
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
             cmd.CommandText = @"INSERT INTO replies (replyauthor,replybody, replytime, replyupdate, ticketid) VALUES (@author, @body, @replytime, @updatetime, @ticketId);";
@@ -108,6 +108,8 @@ namespace QAHub.Models
             cmd.Parameters.AddWithValue("@replytime", this.ReplyTime);
             cmd.Parameters.AddWithValue("@updatetime", this.ReplyUpdate);
             cmd.Parameters.AddWithValue("@ticketId", id);
+            
+            conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
             if (conn != null)
