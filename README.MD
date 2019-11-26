@@ -7,6 +7,16 @@ __ToDo:__
 * add authentication
 * finish user controller
 * Handle error when trying to delete Tickets and Replies that do not exist.
+* when auth is finished, allow all with administrative rights to add to Assignments array (make List<> instead), and Teams array).
+    * this will require a controller for administrative queries/methods.
+* When user is deleted, keep ticket and change id to -1 in tickets and replies.
+
+__Known issues/features__
+
+* queries such as GET /tickets will currently return all tickets, but not their replies.  Reply list appears in the response but is empty.  It's not decided if all replies will be added to a GETALL for tickets
+
+    * the same issue appears when querying ALL users, tickets and replies appear as empty lists.  When a single user is queried, the replies and tickets lists are populated.
+* The current DELETE method on Tickets will only delete a ticket if it has replies.  A new SQL string needs to be written to include tickets with AND without replies.  It is possible to do so with two calls to the db, but it is favorable to do it in one.
 
 ### About
 

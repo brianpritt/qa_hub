@@ -29,5 +29,10 @@ namespace QAHub.Controllers
             user.SaveUser();
             return StatusCode(201);
         }
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody]User user)
+        {
+            user.Update(id);
+        }
     }
 }

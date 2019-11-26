@@ -112,7 +112,9 @@ namespace QAHub.Models
                 if (ticket == null)
                 {
                     Ticket newTicket = new Ticket(TicketId, TicketTitle,  TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);
+
                     Reply newReply = new Reply(ReplyId,ReplyAuthor,ReplyBody,ReplyTime,ReplyUpdate,ReplyTicketId);
+
                     newTicket.TicketReplies.Add(newReply);
                     allTickets.Add(newTicket);
                 }
@@ -169,7 +171,6 @@ namespace QAHub.Models
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             //UPDATE test_accs
-            Console.WriteLine(this.TicketUpdate);
             
             cmd.CommandText = @"UPDATE tickets SET ticketcategory = IFNULL(@thisCategory, ticketcategory), tickettitle = IFNULL(@thisTitle, tickettitle), ticketbody = IFNULL(@thisBody, ticketbody), ticketupdate = @thisUpdateTime WHERE ticketid = @thisId;";
             cmd.Parameters.AddWithValue("@thisUpdateTime", this.TicketUpdate);

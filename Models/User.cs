@@ -122,6 +122,7 @@ namespace QAHub.Models
         public void SaveUser()
         {
             this.UserCreatedTime = DateTime.Now;
+            this.CheckTeam();
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -138,6 +139,36 @@ namespace QAHub.Models
             if(conn != null)
             {
                 conn.Dispose();
+            }
+        }
+        public void Update(int id)
+        {
+            this.CheckTeam();
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+
+            cmd.CommandText = @"Update users SET username = IFNULL(@thisName, username), useremail = IFNULL(@thisEmail, useremail), userteam = IFNULL(@thisTeam, userteam) WHERE userid = @thisId;";
+            cmd.Parameters.AddWithValue("@thisName", this.UserName);
+            cmd.Parameters.AddWithValue("@thisEmail",this.UserEmail);
+            cmd.Parameters.AddWithValue("@thisTeam",this.UserTeam);
+            cmd.Parameters.AddWithValue("@thisId", id);
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            
+            conn.Close();
+            if(conn != null)
+            {
+                conn.Dispose();
+            } 
+        }
+        public void CheckTeam()
+        {
+            //IndexOf returns -1 if array does not contain element
+            int position = Array.IndexOf(User.teams, this.UserTeam.ToLower());
+            if (position < 0)
+            {
+                this.UserTeam = "unassigned";
             }
         }
     }
