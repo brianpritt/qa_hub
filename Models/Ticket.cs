@@ -1,6 +1,4 @@
-//add create date/time, priority, timeline
 //change sting TicketAutor to int TicketAuthor when users is implemented
-//add
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -131,21 +129,24 @@ namespace QAHub.Models
                 conn.Dispose();
             }
             conn.Close();
+            
             return allTickets;
         }
         public void SaveTicket()
         {
             this.TicketTime = DateTime.Now;
+            this.TicketUpdate = DateTime.Now;
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             
-            cmd.CommandText = @"INSERT INTO tickets (tickettitle,ticketcategory,ticketbody,ticketauthor, tickettime) VALUES ( @title, @category, @body, @author, @time);";
+            cmd.CommandText = @"INSERT INTO tickets (tickettitle,ticketcategory,ticketbody,ticketauthor, tickettime, ticketupdate) VALUES ( @title, @category, @body, @author, @time, @update);";
             cmd.Parameters.AddWithValue("@title",this.TicketTitle);
             cmd.Parameters.AddWithValue("@category", this.TicketCategory);
             cmd.Parameters.AddWithValue("@body",this.TicketBody);
             cmd.Parameters.AddWithValue("@author",this.TicketAuthor);
             cmd.Parameters.AddWithValue("@time", this.TicketTime);
+            cmd.Parameters.AddWithValue("@update", this.TicketUpdate);
             cmd.ExecuteNonQuery();
             conn.Close();
             if(conn != null)
@@ -185,7 +186,7 @@ namespace QAHub.Models
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
             //Foreign Key on replies set to Cascade, it fet a little dirty to do it.
-            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid;";
+            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid OR tickets.ticketid = @thisId;";
             cmd.Parameters.AddWithValue("@thisid", id);
 
             cmd.ExecuteNonQuery();

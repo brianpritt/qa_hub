@@ -20,8 +20,13 @@ namespace QAHub.Controllers
         //GET one REPLY
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<Reply>> Get(int id)
-        {
-            return Reply.GetReply(id);
+        {   
+            List<Reply> allReplies= Reply.GetReply(id);
+            if (allReplies.Count == 0)
+            {
+                return StatusCode(204);
+            }
+            return allReplies;
         }
         //POST REPLY to TICKET
         [HttpPost("{id}")]

@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net;
 using QAHub.Models;
-
-
-
+//returns added to previous void methods for future error reporting.
 namespace QAHub.Controllers
 {
     [Route("[controller]")]
@@ -44,6 +42,7 @@ namespace QAHub.Controllers
         
         [HttpPut("{id}/update")]
         // Put Update TICKET {id} ticket/{id}/update
+        // 
         public ActionResult Put(int id, [FromBody]Ticket ticket)
         {
             ticket.Update(id);
