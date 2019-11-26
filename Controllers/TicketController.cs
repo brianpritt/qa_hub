@@ -36,8 +36,8 @@ namespace QAHub.Controllers
         [HttpPost]
         public ActionResult Post([FromBody]Ticket ticket)
         {
-            ticket.SaveTicket();
-            return StatusCode(201);
+            string ret = ticket.SaveTicket();
+            return Ok(ret);
         }
         
         [HttpPut("{id}/update")]

@@ -88,12 +88,15 @@ namespace QAHub.Models
             }
             return allReplies;
         }
-        public void SaveReply(int id)
+        public string SaveReply(int id)
         {
             this.ReplyTime = DateTime.Now;
             this.ReplyUpdate = DateTime.Now;
             Console.WriteLine(DateTime.Now);
-
+            if (this.ReplyAuthor == null || this.ReplyBody == null)
+            {
+                return "Not all fields have been supplied";
+            }
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
@@ -111,6 +114,7 @@ namespace QAHub.Models
             {
                 conn.Dispose();
             }
+            return "Success.";
         }
         public void Update(int id)
         {
@@ -137,7 +141,7 @@ namespace QAHub.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"DELETE FROM replies WHERE replyid = @relyId;";
+            cmd.CommandText = @"DELETE FROM replies WHERE IF EXISTS(replyid = @replyId);";
             cmd.Parameters.AddWithValue("@replyId", id);
             cmd.ExecuteNonQuery();
             if (conn != null)

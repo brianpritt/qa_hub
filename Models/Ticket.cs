@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using System.Linq;
 
-
 namespace QAHub.Models
 {
     public class Ticket
@@ -17,7 +16,7 @@ namespace QAHub.Models
         public DateTime TicketTime {get;set;}
         public DateTime TicketUpdate {get;set;}
         public List<Reply> TicketReplies {get;set;}
-        public static string[] Assignments = {"Platform", "UI", "Data", "Unassigned"};
+        public static string[] Assignments = {"platform", "ui", "data", "unassigned"};
         
         public Ticket()
         {
@@ -132,10 +131,16 @@ namespace QAHub.Models
             
             return allTickets;
         }
-        public void SaveTicket()
+        public string SaveTicket()
         {
             this.TicketTime = DateTime.Now;
             this.TicketUpdate = DateTime.Now;
+            this.CheckAssignment();
+            if (this.TicketAuthor == null || this.TicketBody == null || this.TicketTitle == null)
+            {
+                return "Not all fields have been supplied";
+            }
+            
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
@@ -153,10 +158,12 @@ namespace QAHub.Models
             {
                 conn.Dispose();
             }
+            return "Success.";
         }
         public void Update(int id)
         {
             this.TicketUpdate = DateTime.Now;
+            this.CheckAssignment();
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
@@ -186,7 +193,7 @@ namespace QAHub.Models
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
             //Foreign Key on replies set to Cascade, it fet a little dirty to do it.
-            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid OR tickets.ticketid = @thisId;";
+            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid;";
             cmd.Parameters.AddWithValue("@thisid", id);
 
             cmd.ExecuteNonQuery();
@@ -197,8 +204,12 @@ namespace QAHub.Models
         }
         public void CheckAssignment()
         {
-            // bool a = Array.Exists(Ticket.Assignments, this.TicketCategory);
-            // Console.WriteLine(this.TicketCategory)
+            //check if user supplied category is in the accepted list.
+            int position = Array.IndexOf(Ticket.Assignments, this.TicketCategory.ToLower());
+            if (position < 0 )
+            {
+                this.TicketCategory = "unassigned";
+            }
         }
     }
 }
