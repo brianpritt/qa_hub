@@ -1,10 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.Extensions.Logging;
+using MySqlConnector;
+using Microsoft.EntityFrameworkCore;
+using QAHub.Models;
 
 namespace QAHub
 {
@@ -47,6 +55,6 @@ namespace QAHub
     }
     public static class DBCOnfiguration
     {
-        public static string ConnectionString = "server=<servername>;user id=<userid>;password=<password>;port=3306;database=qa_hub_sql;";
+        public static string ConnectionString = "server=qahub.mysql.database.azure.com;user id=server_admin@qahub;password=!Selfdestruct1;port=3306;database=qa_hub_sql;";
     }
 }
