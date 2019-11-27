@@ -100,13 +100,13 @@ Only three fields are available on PUT request:
 `titckettitle, ticketcategory, ticketbody`
 TicketUpdate will be updated automatically. Not all fields are required for successful PUT.
 
-####Sample `ticket` POST:
-`/tickets/`
-__Curl__
-`curl --header "Content-Type: application/json" -X POST  --data '{"tickettitle":"Submit CTA on main page must be tapped three times before submit action","ticketauthor":1,"ticketcategory":"UI","ticketbody":"After redirection to home page when creating a new account, submit CTA must be tapped three times in order for rom to submit."}'   http://localhost:{port-number}/tickets
-`
+#### Sample `ticket` POST:  
+`/tickets/`  
+__Curl__  
+`curl --header "Content-Type: application/json" -X POST  --data '{"tickettitle":"Submit CTA on main page must be tapped three times before submit action","ticketauthor":1,"ticketcategory":"UI","ticketbody":"After redirection to home page when creating a new account, submit CTA must be tapped three times in order for rom to submit."}'   http://localhost:{port-number}/tickets  
+`  
 
-__Raw JSON Body__ 
+__Raw JSON Body__   
 ```
 {
     "tickettitle": "Submit CTA on main page must be tapped three times before submit action",
@@ -116,23 +116,23 @@ __Raw JSON Body__
 }
 ```
 
-#### Sample `ticket` PUT:
-`/tickets/{id}/update`
-__Curl__
+#### Sample `ticket` PUT:  
+`/tickets/{id}/update`  
+__Curl__  
 
 `curl --header "Content-Type: application/json" -X POST   --data '{"ticketbody":"EDIT: CTA is now non-functional"}'   http://localhost:{port-number}/tickets`
 
-__Raw JSON Body__
+__Raw JSON Body__  
 ```
 {
     "ticketbody": "EDIT: CTA is now non-functional"
 }
 ```
-#### Sample `ticket GET`
+#### Sample `ticket GET`  
 `/tickets`
-__Curl__
+__Curl__  
 `curl http://localhost:5000/tickets`
-__Raw JSON Body__
+__Raw JSON Body__  
 ```
 [
     {
@@ -147,11 +147,11 @@ __Raw JSON Body__
     }
 ]
 ```
-#### Sample Ticket Get (One Ticket)
-`/tickets/{id}`
+#### Sample Ticket Get (One Ticket)  
+`/tickets/{id}`  
 __Curl__
-`curl http://localhost:5000/tickets/{id}`
-__Raw JSON Body__
+`curl http://localhost:5000/tickets/{id}`  
+__Raw JSON Body__  
 ```
 [
     {
@@ -175,21 +175,21 @@ __Raw JSON Body__
     }
 ]
 ```
-### Reply
+### Reply  
 
-In order to successfully add a new reply the following must be present in body:
-`replyauthor` and `replybody`
+In order to successfully add a new reply the following must be present in body:  
+`replyauthor` and `replybody`  
 and the ticketid must be present as a parameter, as such:
-`replies/17`
-Only one field is available on PUT: `replybody`
+`replies/17`  
+Only one field is available on PUT: `replybody`  
 
-#### Sample `Reply` Post
-`/replies/{ticketId}`
+#### Sample `Reply` Post  
+`/replies/{ticketId}`  
 
 `curl --header "Content-Type: application/json" -X POST  --data'{"replyauthor":2,"replybody":"This is the wackiest error"}'   http://localhost:{port-number}/replies/{ticket-id}
 `
 
-__Raw JSON Body__ 
+__Raw JSON Body__   
 ```
 {
     "tickettitle": "Submit CTA on main page must be tapped three times before submit action",
@@ -198,4 +198,4 @@ __Raw JSON Body__
     "ticketauthor": 1
 }
 ```
-#### Sample `Reply` Put
+#### Sample `Reply` Put  
