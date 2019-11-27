@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using QAHub.Models;
 
+//controller for generating reports | not much to see here.
 namespace QAHub.Controllers
 {
     [Route("[controller]")]
@@ -11,9 +12,9 @@ namespace QAHub.Controllers
     public class ReportsController : ControllerBase
     {
        [HttpGet]
-       public ActionResult Get()
+       public IActionResult Get()
        {
-           
+           return Ok(Report.Get());
        }
 
     }

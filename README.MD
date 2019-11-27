@@ -10,6 +10,10 @@ __ToDo:__
 * when auth is finished, allow all with administrative rights to add to Assignments array (make List<> instead), and Teams array).
     * this will require a controller for administrative queries/methods.
 * When user is deleted, keep ticket and change id to -1 in tickets and replies.
+* add to REPORTS CONTROLLER 
+    * user statistics
+    * ticket time statistics
+* assign tickets to user
 
 __Known issues/features__
 * Tickets and replies can be made by non-existent users.
