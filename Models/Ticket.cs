@@ -1,4 +1,3 @@
-//change sting TicketAutor to int TicketAuthor when users is implemented
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
@@ -206,8 +205,9 @@ namespace QAHub.Models
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
-            //Foreign Key on replies set to Cascade, it fet a little dirty to do it.
-            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid;";
+            //This makes two queries to the DB. Had to use joins because of foreign key constraints.  Is there a better method to do both?
+
+            cmd.CommandText = @"DELETE FROM tickets, replies USING tickets INNER JOIN replies WHERE tickets.ticketid = @thisId AND tickets.ticketid = replies.ticketid; DELETE a FROM tickets a LEFT JOIN replies b ON a.ticketid = b.ticketid WHERE a.ticketid = @thisId AND b.ticketid is null;";
             cmd.Parameters.AddWithValue("@thisid", id);
 
             cmd.ExecuteNonQuery();

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using QAHub.Models;
 
@@ -31,7 +29,6 @@ namespace QAHub.Controllers
         
         [HttpPost("{id}")]
         //POST REPLY to TICKET
-        //Put ticket/reply/{ticketId}
         public void Post(int id, [FromBody]Reply reply)
         {
             reply.SaveReply(id); 

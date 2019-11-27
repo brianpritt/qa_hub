@@ -2,10 +2,27 @@
 ### Author: Brian Pritt
 ### November 2019
 
+__About__
+QAHub is a simple QA tracking API.
+It is not weighed down with bells and whistles, and most likely will not add to the richness of your current QA paradigm.
+
+QAHub is built with MySql 8 and .Net Core 3.0
+
+__Requirements:__
+* MySql / MySql Workbench 8.0
+* Microsoft .Net Core 3.x
+
+__To install and use:__
+* Clone repository: https://github.com/brianpritt/qa_hub
+* In project directory run `dotnet restore`
+* In MySql Workbench, run the script found in `qa_hub_mysql.sql`
+* Open `Startup.cs` in project directory and modify the following line to match your connection settings: `public static string ConnectionString = "server={your local host};user id={your user id};password={your password};port=3306;database=qa_hub_sql;";`
+* In project directory enter the following `dotnet run`
+
+
 __ToDo:__
 * add error handling to all routes
 * add authentication
-* finish user controller
 * Handle error when trying to delete Tickets and Replies that do not exist.
 * when auth is finished, allow all with administrative rights to add to Assignments array (make List<> instead), and Teams array).
     * this will require a controller for administrative queries/methods.
@@ -14,14 +31,15 @@ __ToDo:__
     * ticket time statistics
 * assign tickets to user
 
-__Known issues/features__
+__Known issues/features?__
+* Polymorphic Associations
 * Tickets and replies can be made by non-existent users.
 * When querying a single user, a list of tickets will populate with an empty list of replies.  Not sure if I should attempt to remove it.
 * using INNER JOIN on GET one ticket returns only tickets with replies, LEFT JOIN returns null on the replies that do not exist and I have not figured out how to handle.
 * queries such as GET /tickets will currently return all tickets, but not their replies.  Reply list appears in the response but is empty.  It's not decided if all replies will be added to a GETALL for tickets
 
     * the same issue appears when querying ALL users, tickets and replies appear as empty lists.  When a single user is queried, the replies and tickets lists are populated.
-* The current DELETE method on Tickets will only delete a ticket if it has replies.  A new SQL string needs to be written to include tickets with AND without replies.  It is possible to do so with two calls to the db, but it is favorable to do it in one.
+* DELETE on ticket queries db twice.  IT's a challenge to remove a ticket and reply AND remove a ticket with no replies with one query.
 
 ### About
 
@@ -87,7 +105,7 @@ __Curl__
 `curl --header "Content-Type: application/json" -X POST  --data '{"tickettitle":"Submit CTA on main page must be tapped three times before submit action","ticketauthor":1,"ticketcategory":"UI","ticketbody":"After redirection to home page when creating a new account, submit CTA must be tapped three times in order for rom to submit."}'   http://localhost:{port-number}/tickets
 `
 
-__Postman__ 
+__Raw JSON Body__ 
 ```
 {
     "tickettitle": "Submit CTA on main page must be tapped three times before submit action",
@@ -103,7 +121,7 @@ __Curl__
 
 `curl --header "Content-Type: application/json" -X POST   --data '{"ticketbody":"EDIT: CTA is now non-functional"}'   http://localhost:{port-number}/tickets`
 
-__Postman__
+__Raw JSON Body__
 ```
 {
     "ticketbody": "EDIT: CTA is now non-functional"
@@ -113,7 +131,7 @@ __Postman__
 `/tickets`
 __Curl__
 `curl http://localhost:5000/tickets`
-__Postman__
+__Raw JSON Body__
 ```
 [
     {
@@ -132,7 +150,7 @@ __Postman__
 `/tickets/{id}`
 __Curl__
 `curl http://localhost:5000/tickets/{id}`
-__Postman__
+__Raw JSON Body__
 ```
 [
     {
@@ -170,7 +188,7 @@ Only one field is available on PUT: `replybody`
 `curl --header "Content-Type: application/json" -X POST  --data'{"replyauthor":2,"replybody":"This is the wackiest error"}'   http://localhost:{port-number}/replies/{ticket-id}
 `
 
-__Postman__ 
+__Raw JSON Body__ 
 ```
 {
     "tickettitle": "Submit CTA on main page must be tapped three times before submit action",
