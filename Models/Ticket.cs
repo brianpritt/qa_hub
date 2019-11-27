@@ -52,13 +52,22 @@ namespace QAHub.Models
         }
         //should get all pull all of the replies as well?
         // replace .GetReplies() with newest method.
-        public static List<Ticket> GetAll()
+        public static List<Ticket> GetAll(string assignment)
         {
             List<Ticket> allTickets = new List<Ticket>{};
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM tickets;";
+            if (assignment == null)
+            {
+                cmd.CommandText = @"SELECT * FROM tickets;";
+            }
+            else 
+            {
+                cmd.CommandText = @"SELECT * FROM tickets WHERE ticketcategory = @assignment;";
+                cmd.Parameters.AddWithValue("@assignment", assignment);
+            }
+            
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while (rdr.Read())
             {
@@ -91,9 +100,11 @@ namespace QAHub.Models
             cmd.CommandText = @"SELECT * FROM tickets INNER JOIN replies ON tickets.ticketid = replies.ticketid WHERE tickets.ticketid = @thisId;";
             cmd.Parameters.AddWithValue("@thisId", id);
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            
             while (rdr.Read())
             {
                 
+                // Console.WriteLine(rdr.GetBytes(0));
                 int TicketId = rdr.GetInt32(0);
                 string TicketTitle = rdr.GetString(1);
                 string TicketCategory = rdr.GetString(2);
@@ -101,12 +112,13 @@ namespace QAHub.Models
                 int TicketAuthor = rdr.GetInt32(4);
                 DateTime TicketTime = rdr.GetDateTime(5);
                 DateTime TicketUpdate = rdr.GetDateTime(6);
-                int ReplyId = rdr.GetInt32(7);
-                int ReplyAuthor = rdr.GetInt32(8);
-                string ReplyBody = rdr.GetString(9);
-                DateTime ReplyTime = rdr.GetDateTime(10);
-                DateTime ReplyUpdate = rdr.GetDateTime(11);
-                int ReplyTicketId = rdr.GetInt32(12);
+                
+                    var ReplyId = (rdr["replyid"] != DBNull.Value) ? rdr.GetInt32(7) : 0;
+                    int ReplyAuthor = rdr.GetInt32(8);
+                    string ReplyBody = rdr.GetString(9);
+                    DateTime ReplyTime = rdr.GetDateTime(10);
+                    DateTime ReplyUpdate = rdr.GetDateTime(11);
+                    int ReplyTicketId = rdr.GetInt32(12);
                 
                 var ticket  = allTickets.Where(p => p.TicketId == TicketId).FirstOrDefault();
                 if (ticket == null)

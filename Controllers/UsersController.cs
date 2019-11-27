@@ -16,23 +16,31 @@ namespace QAHub.Controllers
         {
             return QAHub.Models.User.Get();
         }
-        
+        //GET User /users/{id}
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<User>> GetUser(int id)
         {
             
             return QAHub.Models.User.GetUser(id);
         }
-        [HttpPost]
+        //Post new User /users/new
+        [HttpPost("/new")]
         public ActionResult Post([FromBody]User user)
         {
             user.SaveUser();
             return StatusCode(201);
         }
-        [HttpPut("{id}")]
+        //PUT existing user /users/{id}/update
+        [HttpPut("{id}/update")]
         public void Put(int id, [FromBody]User user)
         {
             user.Update(id);
+        }
+        //Delete user /users/{id}/delete
+        [HttpDelete("{id}/delete")]
+        public void Delete(int id)
+        {
+            QAHub.Models.User.DeleteUser(id);
         }
     }
 }

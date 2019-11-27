@@ -12,12 +12,12 @@ namespace QAHub.Controllers
     {
         
         [HttpGet]
-        //useless route
+        //useless route /replies/
         public ActionResult<IEnumerable<Reply>> Get()
         {
             return Reply.GetAll();
         }
-        //GET one REPLY
+        //GET one REPLY /replies/{id}
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<Reply>> Get(int id)
         {   
@@ -28,27 +28,25 @@ namespace QAHub.Controllers
             }
             return allReplies;
         }
-        //POST REPLY to TICKET
+        
         [HttpPost("{id}")]
+        //POST REPLY to TICKET
         //Put ticket/reply/{ticketId}
-        public ActionResult Post(int id, [FromBody]Reply reply)
+        public void Post(int id, [FromBody]Reply reply)
         {
-            reply.SaveReply(id);  
-            return StatusCode(201);
+            reply.SaveReply(id); 
         }
-        //PUT REPLY
+        //PUT REPLY /replies/{id}/update
         [HttpPut("{id}/update")]
-        public ActionResult Update(int id, [FromBody]Reply reply)
+        public void Update(int id, [FromBody]Reply reply)
         {
             reply.Update(id);
-            return StatusCode(201);
         }
-        //Delete REPLY
+        //Delete REPLY /replies/{id}/delete
         [HttpDelete("{id}/delete")]
-        public ActionResult Delete(int id)
+        public void Delete(int id)
         {
             Reply.Delete(id);
-            return StatusCode(200);
         }
         
     }

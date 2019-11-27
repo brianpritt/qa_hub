@@ -14,26 +14,21 @@ namespace QAHub.Controllers
     {
         [HttpGet]
         // GET all TICKETS /tickets
-        public ActionResult<IEnumerable<Ticket>> Get()
+        public ActionResult<IEnumerable<Ticket>> Get(string assignment)
         {
-           return Ticket.GetAll();
+           return Ticket.GetAll(assignment);
         }
 
          //Get TICKET with {id} /ticket/{id}
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public ActionResult <IEnumerable<Ticket>> Get(int id)
         {
             List<Ticket> responseTicket =Ticket.GetTicket(id);
-            if (responseTicket.Count == 0)
-            {
-                return StatusCode(204);
-
-            }
-            return new ObjectResult(Ticket.GetTicket(id));
+            return Ticket.GetTicket(id);
         }
       
-        //Post Create new TICKET /ticket
-        [HttpPost]
+        //Post Create new TICKET /ticket/new
+        [HttpPost("/new")]
         public ActionResult Post([FromBody]Ticket ticket)
         {
             string ret = ticket.SaveTicket();
@@ -43,17 +38,15 @@ namespace QAHub.Controllers
         [HttpPut("{id}/update")]
         // Put Update TICKET {id} ticket/{id}/update
         // 
-        public ActionResult Put(int id, [FromBody]Ticket ticket)
+        public void Put(int id, [FromBody]Ticket ticket)
         {
             ticket.Update(id);
-            return StatusCode(201);
         }
-        // we dont want a delete all, just a /delete/{id}
+        //DELETE Ticket {id} ticket/{id}/delete
         [HttpDelete("{id}/delete")]
-        public ActionResult Delete(int id)
+        public void Delete(int id)
         {
             Ticket.DeleteTicket(id);
-            return StatusCode(200);
         }
         [HttpDelete]
         public void DeleteAll()

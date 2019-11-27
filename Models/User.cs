@@ -162,6 +162,23 @@ namespace QAHub.Models
                 conn.Dispose();
             } 
         }
+        public static void DeleteUser(int id)
+        {
+            //removed foreign key on replies pertaining to users, as a result deleted user can be added to tickets.  No time to fix now
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM users WHERE userid = @userid; UPDATE tickets SET ticketauthor = @deleted WHERE ticketauthor = @userid; UPDATE replies SET replyauthor = @deleted WHERE replyauthor = @userid;";
+            cmd.Parameters.AddWithValue("@userid", id);
+            cmd.Parameters.AddWithValue("@deleted", -1);
+
+             cmd.ExecuteNonQuery();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
         public void CheckTeam()
         {
             //IndexOf returns -1 if array does not contain element

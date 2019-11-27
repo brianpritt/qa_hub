@@ -12,7 +12,8 @@ __ToDo:__
 * When user is deleted, keep ticket and change id to -1 in tickets and replies.
 
 __Known issues/features__
-
+* Tickets and replies can be made by non-existent users.
+* using inner join on get one ticket returns only tickets with replies, left join returns null on the replies that do not exist and I have not figured out how to handle.
 * queries such as GET /tickets will currently return all tickets, but not their replies.  Reply list appears in the response but is empty.  It's not decided if all replies will be added to a GETALL for tickets
 
     * the same issue appears when querying ALL users, tickets and replies appear as empty lists.  When a single user is queried, the replies and tickets lists are populated.
