@@ -28,7 +28,7 @@ namespace QAHub.Controllers
         }
       
         //Post Create new TICKET /ticket/new
-        [HttpPost("/new")]
+        [HttpPost]
         public ActionResult Post([FromBody]Ticket ticket)
         {
             string ret = ticket.SaveTicket();

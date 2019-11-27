@@ -24,7 +24,7 @@ namespace QAHub.Controllers
             return QAHub.Models.User.GetUser(id);
         }
         //Post new User /users/new
-        [HttpPost("/new")]
+        [HttpPost]
         public ActionResult Post([FromBody]User user)
         {
             user.SaveUser();
