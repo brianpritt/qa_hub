@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using Json;
 namespace QAHub.Models
 {
     public class Report
