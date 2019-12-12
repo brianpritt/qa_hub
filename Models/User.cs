@@ -14,6 +14,8 @@ namespace QAHub.Models
         public DateTime UserCreatedTime {get;set;}
         public List<Ticket> UserTickets {get;set;}
         public List<Reply> UserReplies {get;set;}
+        //The following could be moved to an external file, so it would be easier to modify
+        //Possibly, with the addition of a console application it would make a lot of sense.
         public static string[] teams = {"platform", "ui", "data", "qa", "sales", "support", "unassigned"};
 
         public User()
@@ -65,7 +67,7 @@ namespace QAHub.Models
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM users INNER JOIN tickets ON users.userid = tickets.ticketauthor INNER JOIN replies ON users.userid = replies.replyauthor WHERE users.userid = @thisId;";
+            cmd.CommandText = @"SELECT * FROM users LEFT JOIN tickets ON users.userid = tickets.ticketauthor INNER JOIN replies ON users.userid = replies.replyauthor WHERE users.userid = @thisId;";
             cmd.Parameters.AddWithValue("@thisId", id);
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             while(rdr.Read())

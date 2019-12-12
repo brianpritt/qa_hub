@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using QAHub.Models;
 namespace QAHub.Controllers
+
 {
     [Route("[controller]")]
     [ApiController]
@@ -18,21 +19,19 @@ namespace QAHub.Controllers
         [HttpGet("{id}")]
         public ActionResult <IEnumerable<Ticket>> Get(int id)
         {
-            List<Ticket> responseTicket =Ticket.GetTicket(id);
             return Ticket.GetTicket(id);
         }
       
         //Post Create new TICKET /ticket/new
         [HttpPost]
-        public ActionResult Post([FromBody]Ticket ticket)
+        public void Post([FromBody]Ticket ticket)
         {
-            string ret = ticket.SaveTicket();
-            return Ok(ret);
+            ticket.SaveTicket();
+            
         }
         
-        [HttpPut("{id}/update")]
         // Put Update TICKET {id} ticket/{id}/update
-        // 
+        [HttpPut("{id}/update")]
         public void Put(int id, [FromBody]Ticket ticket)
         {
             ticket.Update(id);

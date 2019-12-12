@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using QAHub.Models;
+using System.Text.RegularExpressions;
 // Change Users to something else, used by SYSTEM and gets confusing
 namespace QAHub.Controllers
 {
@@ -18,16 +19,14 @@ namespace QAHub.Controllers
         //GET User /users/{id}
         [HttpGet("{id}")]
         public ActionResult<IEnumerable<User>> GetUser(int id)
-        {
-            
+        {   
             return QAHub.Models.User.GetUser(id);
         }
         //Post new User /users/new
         [HttpPost]
-        public ActionResult Post([FromBody]User user)
+        public void Post([FromBody]User user)
         {
             user.SaveUser();
-            return StatusCode(201);
         }
         //PUT existing user /users/{id}/update
         [HttpPut("{id}/update")]

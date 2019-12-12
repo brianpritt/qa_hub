@@ -34,13 +34,14 @@ __ToDo:__
 __Known issues/features?__
 * Polymorphic Associations
 * Tickets and replies can be made by non-existent users.
+    * When authentication is implemented, this will not be an issue as it will use current user only
 * When querying a single user, a list of tickets will populate with an empty list of replies.  Not sure if I should attempt to remove it.
-* Currently, because of foreign key association, a single user cannot be queried unless they have both tickets and repies active.
-* using INNER JOIN on GET one ticket returns only tickets with replies, LEFT JOIN returns null on the replies that do not exist and I have not figured out how to handle.
+~~Currently, because of foreign key association, a single user cannot be queried unless they have both tickets and repies active.~~
+~~using INNER JOIN on GET one ticket returns only tickets with replies, LEFT JOIN returns null on the replies that do not exist and I have not figured out how to handle.~~
+    * Fix for this was quick and dirty, but done for now.
 * queries such as GET /tickets will currently return all tickets, but not their replies.  Reply list appears in the response but is empty.  It's not decided if all replies will be added to a GETALL for tickets
-
     * the same issue appears when querying ALL users, tickets and replies appear as empty lists.  When a single user is queried, the replies and tickets lists are populated.
-* DELETE on ticket queries db twice.  IT's a challenge to remove a ticket and reply AND remove a ticket with no replies with one query.
+* DELETE on ticket queries db twice.  It's a challenge to remove a ticket and reply AND remove a ticket with no replies with one query.
 
 ### About
 

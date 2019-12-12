@@ -55,6 +55,6 @@ namespace QAHub
     }
     public static class DBCOnfiguration
     {
-        public static string ConnectionString = "server=qahub.mysql.database.azure.com;user id=server_admin@qahub;password=!Selfdestruct1;port=3306;database=qa_hub_sql;";
+        public static string ConnectionString = "server=localhost;user id=root;password=selfdestruct;port=3306;database=qa_hub_sql;";
     }
 }

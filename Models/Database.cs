@@ -7,8 +7,10 @@ namespace QAHub.Models
     {
         public static MySqlConnection Connection()
         {
+            
             MySqlConnection conn = new MySqlConnection(DBCOnfiguration.ConnectionString);
             return conn;
+
         }
     }
 }

@@ -50,7 +50,6 @@ namespace QAHub.Models
             TicketReplies = new List<Reply>{};
         }
         //should get all pull all of the replies as well?
-        // replace .GetReplies() with newest method.
         public static List<Ticket> GetAll(string assignment)
         {
             List<Ticket> allTickets = new List<Ticket>{};
@@ -79,7 +78,6 @@ namespace QAHub.Models
                 DateTime TicketUpdate =rdr.GetDateTime(6);
                 
                 Ticket currentTicket = new Ticket(TicketId, TicketTitle, TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);
-                // currentTicket.TicketReplies = Reply.GetReplies(currentTicket.TicketId);
                 allTickets.Add(currentTicket);
             }
             conn.Close();
@@ -96,7 +94,7 @@ namespace QAHub.Models
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
-            cmd.CommandText = @"SELECT * FROM tickets INNER JOIN replies ON tickets.ticketid = replies.ticketid WHERE tickets.ticketid = @thisId;";
+            cmd.CommandText = @"SELECT * FROM tickets LEFT JOIN replies ON tickets.ticketid = replies.ticketid WHERE tickets.ticketid = @thisId;";
             cmd.Parameters.AddWithValue("@thisId", id);
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
             
@@ -111,30 +109,37 @@ namespace QAHub.Models
                 int TicketAuthor = rdr.GetInt32(4);
                 DateTime TicketTime = rdr.GetDateTime(5);
                 DateTime TicketUpdate = rdr.GetDateTime(6);
-                
-                    var ReplyId = (rdr["replyid"] != DBNull.Value) ? rdr.GetInt32(7) : 0;
+                //This if was put in place to prevent DBNull errors
+                if (rdr["replyid"] != DBNull.Value){
+                    var ReplyId = rdr.GetInt32(7);
                     int ReplyAuthor = rdr.GetInt32(8);
                     string ReplyBody = rdr.GetString(9);
                     DateTime ReplyTime = rdr.GetDateTime(10);
                     DateTime ReplyUpdate = rdr.GetDateTime(11);
                     int ReplyTicketId = rdr.GetInt32(12);
-                
-                var ticket  = allTickets.Where(p => p.TicketId == TicketId).FirstOrDefault();
-                if (ticket == null)
-                {
-                    Ticket newTicket = new Ticket(TicketId, TicketTitle,  TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);
+                    
+                    var ticket  = allTickets.Where(p => p.TicketId == TicketId).FirstOrDefault();
+                    //if there is no ticket in the list, create it here, otherwise skip to populating replies
+                    if (ticket == null)
+                    {
+                        Ticket newTicket = new Ticket(TicketId, TicketTitle,  TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);
 
-                    Reply newReply = new Reply(ReplyId,ReplyAuthor,ReplyBody,ReplyTime,ReplyUpdate,ReplyTicketId);
+                        Reply newReply = new Reply(ReplyId,ReplyAuthor,ReplyBody,ReplyTime,ReplyUpdate,ReplyTicketId);
 
-                    newTicket.TicketReplies.Add(newReply);
-                    allTickets.Add(newTicket);
+                        newTicket.TicketReplies.Add(newReply);
+                        allTickets.Add(newTicket);
+                    }
+                    else
+                    {
+                        Reply newReply = new Reply(ReplyId,ReplyAuthor,ReplyBody,ReplyTime,ReplyUpdate,ReplyTicketId);
+                        ticket.TicketReplies.Add(newReply);
+                    }
                 }
                 else
                 {
-                    Reply newReply = new Reply(ReplyId,ReplyAuthor,ReplyBody,ReplyTime,ReplyUpdate,ReplyTicketId);
-                    ticket.TicketReplies.Add(newReply);
+                 Ticket newTicket = new Ticket(TicketId, TicketTitle,  TicketCategory, TicketBody, TicketAuthor, TicketTime, TicketUpdate);  
+                 allTickets.Add(newTicket); 
                 }
-                
             }
             if (conn != null)
             {
